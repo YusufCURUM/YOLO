@@ -92,21 +92,16 @@ First of all, I have tested this demo in window, mac and linux environments and 
 **Run v4_tiny.py**
 
 -  	image→video→capture→push stream
-任需优化，后续补充量化版本，待更新...
 
 **Run v5_dnn.py**
 
 -  	image(473 ms / Inference Image / Core i5-4210)→video→capture(213 ms / Inference Image / Core i5-4210)→push stream
 
-2021-04-26 记：有趣的是，用onnx＋dnn的方式调用v5s的模型，推理图片要比摄像头处理帧多花一倍的时间，看了很久，还是找不出问题所在，希望看到的大佬可以帮看看代码，点破问题所在，感谢！
-
-2021-05-01 更：今天找到了问题所在，因为v5_dnn.py文件中有个推理时间画在帧图上的功能（*cv2.putText(frame, "TIME: " + str(localtime), (8, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)*），而这个功能居然花费了每帧推理后处理时间的2/3（大约一帧是50-80ms），后续的版本全部去掉，改成终端显示，每帧推理时间由190ms→130ms，也是恐怖额。
-
 ##  Supplement
 
 This is a DNN repository that integrates the current detection algorithms. You may ask why call the model with DNN, not just git clone the whole framework down? In fact, when we are working with models, it is more advisable to separate training and inference. More, when you deploy models on a customer's production line, if you package up the training code and the training-dependent environment for each set of models (yet the customer's platform only needs you to infer, no training required for you), you will be dead after a few sets of models. As an example, here is the docker for the same version of yolov5 (complete code and dependencies & inference code and dependencies). The entire docker has enough memory to support about **four** sets of inference dockers.
 
-这是一个整合了当前检测算法的DNN资源库。你可能会问，为什么用DNN调用模型，而不是直接用git克隆整个框架下来？事实上，当我们在处理模型的时候，把训练和推理分开是比较明智的。更多的是，当你在客户的生产线上部署模型的时候，如果你把每套模型的训练代码和依赖训练的环境打包起来（然而客户的平台只需要你推理，不需要你训练），那么你在几套模型之后就凉了呀。作为一个例子，这里是同一版本的yolov5的docker（完整的代码和依赖性→6.06G &推理代码和依赖性→0.4G）。整个docker有足够的内存来支持大约15套推理docker。
+
 
 ![](https://github.com/pengtougu/DNN-Lightweight-Streaming/blob/master/result/%E6%8D%95%E8%8E%B7.PNG)
 
@@ -120,4 +115,4 @@ This is a DNN repository that integrates the current detection algorithms. You m
 - [https://github.com/hpc203/yolov5-dnn-cpp-python](https://github.com/hpc203/yolov5-dnn-cpp-python)
 - [https://github.com/hpc203/nanodet-opncv-dnn-cpp-python](https://github.com/hpc203/nanodet-opncv-dnn-cpp-python)
 ##  other
--   中文操作教程：[https://blog.csdn.net/weixin_45829462/article/details/115806322](https://blog.csdn.net/weixin_45829462/article/details/115806322)
+-  ：[https://blog.csdn.net/weixin_45829462/article/details/115806322](https://blog.csdn.net/weixin_45829462/article/details/115806322)
